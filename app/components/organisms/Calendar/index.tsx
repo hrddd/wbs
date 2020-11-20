@@ -16,7 +16,7 @@ export function Calendar() {
       startDay: new Date(year, month - 1, 1).getDay(),
     }
   })
-  const tasks = new Array(50).fill(0).map((_value, index) => index)
+  const tasks = new Array(50).fill(0).map((_value, index) => "タスク その" + index)
 
   const dates = monthes
     .map(({ year, month, startDate, endDate, startDay }) => {
@@ -32,120 +32,171 @@ export function Calendar() {
   return (
     <div
       style={{
-        width: "1000px",
-        overflowX: "auto",
+        display: "flex",
+        border: "1px solid #ccc",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-        }}
-      >
-        {dates.map(({ year, date, month }, index) => (
-          <div key={`Calendar_year_${year}_${month}_${date}`}>
-            <div
-              style={{
-                borderLeft: index === 0 || (month === 1 && date === 1) ? "1px solid #ccc" : "none",
-                borderBottom: "1px solid #ccc",
-                display: "flex",
-                justifyContent: "center",
-                width: "30px",
-                height: "30px",
-                flex: "0 0 30px",
-                flexDirection: "column",
-              }}
-            >
-              {index === 0 || (month === 1 && date === 1) ? year : ""}
-            </div>
-          </div>
-        ))}
-      </div>
-      <div
-        style={{
-          display: "flex",
-        }}
-      >
-        {dates.map(({ year, date, month }, index) => (
-          <div key={`Calendar_month_${year}_${month}_${date}`}>
-            <div
-              style={{
-                borderLeft: index === 0 || date === 1 ? "1px solid #ccc" : "none",
-                borderBottom: "1px solid #ccc",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "30px",
-                height: "30px",
-                flex: "0 0 30px",
-                flexDirection: "column",
-              }}
-            >
-              {index === 0 || date === 1 ? month : ""}
-            </div>
-          </div>
-        ))}
-      </div>
-      <div
-        style={{
-          display: "flex",
-        }}
-      >
-        {dates.map(({ year, date, day, month }) => (
-          <div key={`Calendar_date_${year}_${month}_${date}`}>
-            <div
-              style={{
-                borderLeft: "1px solid #ccc",
-                borderBottom: "1px solid #ccc",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "30px",
-                height: "30px",
-                flex: "0 0 30px",
-                flexDirection: "column",
-              }}
-            >
-              {date}
-            </div>
-            <div
-              style={{
-                borderLeft: "1px solid #ccc",
-                borderBottom: "1px solid #ccc",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "30px",
-                height: "30px",
-                flex: "0 0 30px",
-                flexDirection: "column",
-              }}
-            >
-              {day}
-            </div>
-          </div>
-        ))}
-      </div>
-      {tasks.map((task) => (
+      <div>
         <div
-          key={`Calendar_task_${task}`}
+          style={{
+            width: "30px",
+            height: "30px",
+          }}
+        ></div>
+        <div
+          style={{
+            width: "30px",
+            height: "30px",
+          }}
+        ></div>
+        <div
+          style={{
+            width: "30px",
+            height: "30px",
+          }}
+        ></div>
+        <div
+          style={{
+            width: "30px",
+            height: "30px",
+          }}
+        ></div>
+        {tasks.map((task) => (
+          <div
+            key={`Calendar_task_name_${task}`}
+            style={{
+              borderTop: "1px solid #ccc",
+              display: "flex",
+              width: "100px",
+              height: "30px",
+              flex: "0 0 30px",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {task}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div
+        style={{
+          width: "1000px",
+          overflowX: "auto",
+          boxShadow: "1px 0 0 0 #ccc inset",
+        }}
+      >
+        <div
           style={{
             display: "flex",
           }}
         >
-          {dates.map(({ year, month, date }) => (
-            <div
-              key={`Calendar_task_${task}_date_${year}_${month}_${date}`}
-              style={{
-                borderLeft: "1px solid #ccc",
-                borderBottom: "1px solid #ccc",
-                width: "30px",
-                height: "30px",
-                flex: "0 0 30px",
-              }}
-            ></div>
+          {dates.map(({ year, date, month }, index) => (
+            <div key={`Calendar_year_${year}_${month}_${date}`}>
+              <div
+                style={{
+                  borderLeft:
+                    index === 0 || (month === 1 && date === 1) ? "1px solid #ccc" : "none",
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "30px",
+                  height: "30px",
+                  flex: "0 0 30px",
+                  flexDirection: "column",
+                }}
+              >
+                {index === 0 || (month === 1 && date === 1) ? year : ""}
+              </div>
+            </div>
           ))}
         </div>
-      ))}
+        <div
+          style={{
+            display: "flex",
+          }}
+        >
+          {dates.map(({ year, date, month }, index) => (
+            <div key={`Calendar_month_${year}_${month}_${date}`}>
+              <div
+                style={{
+                  borderLeft: index === 0 || date === 1 ? "1px solid #ccc" : "none",
+                  borderTop: "1px solid #ccc",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "30px",
+                  height: "30px",
+                  flex: "0 0 30px",
+                  flexDirection: "column",
+                }}
+              >
+                {index === 0 || date === 1 ? month : ""}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div
+          style={{
+            display: "flex",
+          }}
+        >
+          {dates.map(({ year, date, day, month }) => (
+            <div key={`Calendar_date_${year}_${month}_${date}`}>
+              <div
+                style={{
+                  borderLeft: "1px solid #ccc",
+                  borderTop: "1px solid #ccc",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "30px",
+                  height: "30px",
+                  flex: "0 0 30px",
+                  flexDirection: "column",
+                }}
+              >
+                {date}
+              </div>
+              <div
+                style={{
+                  borderLeft: "1px solid #ccc",
+                  borderTop: "1px solid #ccc",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "30px",
+                  height: "30px",
+                  flex: "0 0 30px",
+                  flexDirection: "column",
+                }}
+              >
+                {day}
+              </div>
+            </div>
+          ))}
+        </div>
+        {tasks.map((task) => (
+          <div
+            key={`Calendar_task_${task}`}
+            style={{
+              display: "flex",
+            }}
+          >
+            {dates.map(({ year, month, date }) => (
+              <div
+                key={`Calendar_task_${task}_date_${year}_${month}_${date}`}
+                style={{
+                  borderLeft: "1px solid #ccc",
+                  borderTop: "1px solid #ccc",
+                  width: "30px",
+                  height: "30px",
+                  flex: "0 0 30px",
+                }}
+              ></div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
