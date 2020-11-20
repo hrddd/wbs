@@ -1,0 +1,15 @@
+.Calendar {
+  display: block;
+  border: 1px solid #333;
+}
+
+.Calendar-row {
+  display: flex;
+  border-bottom: 1px solid #333;
+}
+
+.Calendar-cell {
+  width: 20px;
+  height: 20px;
+  border-right: 1px solid #333;
+}

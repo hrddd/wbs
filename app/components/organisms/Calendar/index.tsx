@@ -16,15 +16,15 @@ export function Calendar() {
       startDay: new Date(year, month - 1, 1).getDay(),
     }
   })
-  const tasks = new Array(50).fill(0).map((index) => index)
+  const tasks = new Array(50).fill(0).map((_value, index) => index)
 
-  const days = monthes
+  const dates = monthes
     .map(({ year, month, startDate, endDate, startDay }) => {
       return new Array(endDate - startDate + 1).fill(0).map((_item, index) => ({
         year,
         month,
-        day: startDate + index,
-        week: week[(startDay + index) % 6],
+        date: startDate + index,
+        day: week[(startDay + index) % 6],
       }))
     })
     .reduce((acc, item) => [...acc, ...item], [])
@@ -41,11 +41,11 @@ export function Calendar() {
           display: "flex",
         }}
       >
-        {days.map(({ year, day, month }, index) => (
-          <div key={`Calendar_month_${year}_${month}_${day}`}>
+        {dates.map(({ year, date, month }, index) => (
+          <div key={`Calendar_year_${year}_${month}_${date}`}>
             <div
               style={{
-                borderLeft: index === 0 || (month === 1 && day === 1) ? "1px solid #ccc" : "none",
+                borderLeft: index === 0 || (month === 1 && date === 1) ? "1px solid #ccc" : "none",
                 borderBottom: "1px solid #ccc",
                 display: "flex",
                 justifyContent: "center",
@@ -55,7 +55,7 @@ export function Calendar() {
                 flexDirection: "column",
               }}
             >
-              {index === 0 || (month === 1 && day === 1) ? year : ""}
+              {index === 0 || (month === 1 && date === 1) ? year : ""}
             </div>
           </div>
         ))}
@@ -65,11 +65,11 @@ export function Calendar() {
           display: "flex",
         }}
       >
-        {days.map(({ year, day, month }, index) => (
-          <div key={`Calendar_month_${year}_${month}_${day}`}>
+        {dates.map(({ year, date, month }, index) => (
+          <div key={`Calendar_month_${year}_${month}_${date}`}>
             <div
               style={{
-                borderLeft: index === 0 || day === 1 ? "1px solid #ccc" : "none",
+                borderLeft: index === 0 || date === 1 ? "1px solid #ccc" : "none",
                 borderBottom: "1px solid #ccc",
                 display: "flex",
                 alignItems: "center",
@@ -80,7 +80,7 @@ export function Calendar() {
                 flexDirection: "column",
               }}
             >
-              {index === 0 || day === 1 ? month : ""}
+              {index === 0 || date === 1 ? month : ""}
             </div>
           </div>
         ))}
@@ -90,8 +90,23 @@ export function Calendar() {
           display: "flex",
         }}
       >
-        {days.map(({ year, day, week, month }) => (
-          <div key={`Calendar_day_${year}_${month}_${day}`}>
+        {dates.map(({ year, date, day, month }) => (
+          <div key={`Calendar_date_${year}_${month}_${date}`}>
+            <div
+              style={{
+                borderLeft: "1px solid #ccc",
+                borderBottom: "1px solid #ccc",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "30px",
+                height: "30px",
+                flex: "0 0 30px",
+                flexDirection: "column",
+              }}
+            >
+              {date}
+            </div>
             <div
               style={{
                 borderLeft: "1px solid #ccc",
@@ -107,33 +122,19 @@ export function Calendar() {
             >
               {day}
             </div>
-            <div
-              style={{
-                borderLeft: "1px solid #ccc",
-                borderBottom: "1px solid #ccc",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "30px",
-                height: "30px",
-                flex: "0 0 30px",
-                flexDirection: "column",
-              }}
-            >
-              {week}
-            </div>
           </div>
         ))}
       </div>
       {tasks.map((task) => (
         <div
+          key={`Calendar_task_${task}`}
           style={{
             display: "flex",
           }}
         >
-          {days.map(({ year, month, day }) => (
+          {dates.map(({ year, month, date }) => (
             <div
-              key={`Calendar_cell_${year}_${month}_${day}_${task}`}
+              key={`Calendar_task_${task}_date_${year}_${month}_${date}`}
               style={{
                 borderLeft: "1px solid #ccc",
                 borderBottom: "1px solid #ccc",
