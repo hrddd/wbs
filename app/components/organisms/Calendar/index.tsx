@@ -29,6 +29,15 @@ export function Calendar() {
     })
     .reduce((acc, item) => [...acc, ...item], [])
 
+  const years = monthes.reduce((acc, { year, month, startDate, endDate, startDay }) => {
+    return {
+      ...acc,
+      [year]: {
+        cellLength: (acc[year]?.cellLength || 0) + (endDate - startDate + 1),
+      },
+    }
+  }, {} as { [key: string]: { cellLength: number } })
+
   return (
     <div
       style={{
@@ -91,24 +100,38 @@ export function Calendar() {
             display: "flex",
           }}
         >
-          {dates.map(({ year, date, month }, index) => (
-            <div key={`Calendar_year_${year}_${month}_${date}`}>
+          {Object.entries(years).map(([year, data], index) => {
+            return (
               <div
+                key={`Calendar_year_wrap_${year}`}
                 style={{
-                  borderLeft:
-                    index === 0 || (month === 1 && date === 1) ? "1px solid #ccc" : "none",
                   display: "flex",
-                  justifyContent: "center",
-                  width: "30px",
-                  height: "30px",
-                  flex: "0 0 30px",
-                  flexDirection: "column",
                 }}
               >
-                {index === 0 || (month === 1 && date === 1) ? year : ""}
+                {new Array(data.cellLength).fill(0).map((_data, index) => {
+                  const shouldDrawYear = index === 0
+                  return (
+                    <div
+                      key={`Calendar_year_${year}_${index}`}
+                      style={{
+                        borderLeft: shouldDrawYear ? "1px solid #ccc" : "none",
+                        position: shouldDrawYear ? "sticky" : "static",
+                        display: "flex",
+                        justifyContent: "center",
+                        width: "30px",
+                        height: "30px",
+                        flex: "0 0 30px",
+                        flexDirection: "column",
+                        left: shouldDrawYear ? 0 : "auto",
+                      }}
+                    >
+                      {shouldDrawYear ? year : ""}
+                    </div>
+                  )
+                })}
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
         <div
           style={{
