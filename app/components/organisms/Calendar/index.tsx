@@ -1,4 +1,6 @@
 import React from "react"
+import { StickyRow } from "./StickyRow"
+import { StickyRowProps } from "../../../../.blitz/caches/dev/app/components/organisms/Calendar/StickyRow"
 
 export function Calendar() {
   const startDate = new Date(2021, 6, 6)
@@ -33,10 +35,16 @@ export function Calendar() {
     return {
       ...acc,
       [year]: {
-        cellLength: (acc[year]?.cellLength || 0) + (endDate - startDate + 1),
+        dateTotalCount: (acc[year]?.dateTotalCount || 0) + (endDate - startDate + 1),
       },
     }
-  }, {} as { [key: string]: { cellLength: number } })
+  }, {} as { [key: string]: { dateTotalCount: number } })
+  const yearLabels: StickyRowProps = Object.entries(years).map(
+    ([year, { dateTotalCount }], index) => ({
+      label: year,
+      cellLength: dateTotalCount,
+    })
+  )
 
   return (
     <div
@@ -95,44 +103,7 @@ export function Calendar() {
           boxShadow: "1px 0 0 0 #ccc inset",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          {Object.entries(years).map(([year, data], index) => {
-            return (
-              <div
-                key={`Calendar_year_wrap_${year}`}
-                style={{
-                  display: "flex",
-                }}
-              >
-                {new Array(data.cellLength).fill(0).map((_data, index) => {
-                  const shouldDrawYear = index === 0
-                  return (
-                    <div
-                      key={`Calendar_year_${year}_${index}`}
-                      style={{
-                        borderLeft: shouldDrawYear ? "1px solid #ccc" : "none",
-                        position: shouldDrawYear ? "sticky" : "static",
-                        display: "flex",
-                        justifyContent: "center",
-                        width: "30px",
-                        height: "30px",
-                        flex: "0 0 30px",
-                        flexDirection: "column",
-                        left: shouldDrawYear ? 0 : "auto",
-                      }}
-                    >
-                      {shouldDrawYear ? year : ""}
-                    </div>
-                  )
-                })}
-              </div>
-            )
-          })}
-        </div>
+        <StickyRow labels={yearLabels} />
         <div
           style={{
             display: "flex",
