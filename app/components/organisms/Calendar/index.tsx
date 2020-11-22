@@ -1,6 +1,5 @@
 import React from "react"
-import { StickyRow } from "./StickyRow"
-import { StickyRowProps } from "../../../../.blitz/caches/dev/app/components/organisms/Calendar/StickyRow"
+import { StickyRow, StickyRowProps } from "./StickyRow"
 
 export function Calendar() {
   const startDate = new Date(2021, 6, 6)
@@ -39,7 +38,7 @@ export function Calendar() {
       },
     }
   }, {} as { [key: string]: { dateTotalCount: number } })
-  const yearLabels: StickyRowProps = Object.entries(years).map(
+  const yearLabels: StickyRowProps["labels"] = Object.entries(years).map(
     ([year, { dateTotalCount }], index) => ({
       label: year,
       cellLength: dateTotalCount,

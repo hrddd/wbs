@@ -1,6 +1,5 @@
 import React from "react"
-import { StickyCells } from "./StickyCells"
-import { StickyCellsProps } from "../../../../.blitz/caches/dev/app/components/organisms/Calendar/StickyCells"
+import { StickyCells, StickyCellsProps } from "./StickyCells"
 
 export type StickyRowProps = {
   labels: StickyCellsProps[]
