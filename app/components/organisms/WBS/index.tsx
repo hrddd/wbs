@@ -7,7 +7,7 @@ export function WBS() {
   const week = ["日", "月", "火", "水", "木", "金", "土"]
   const monthes = new Array(13).fill(0).map((_item, index) => {
     const year = startMonth + index <= 12 ? startDate.getFullYear() : startDate.getFullYear() + 1
-    const month = (startMonth + index) % 12
+    const month = (startMonth + index) % 12 || 12 // TODO: declare Month type,,,: 0 < Month < 13
     const endDate = new Date(year, month, 0).getDate()
     const _startDate = index === 0 ? startDate.getDate() : 1
     const _endDate = index === 12 ? startDate.getDate() - 1 : endDate
