@@ -1,5 +1,5 @@
 {
-  "name": "calendar",
+  "name": "wbs",
   "version": "1.0.0",
   "scripts": {
     "start": "blitz start",
