@@ -1,7 +1,7 @@
 import React from "react"
 import { StickyRow, StickyRowProps } from "./StickyRow"
 
-export function Calendar() {
+export function WBS() {
   const startDate = new Date(2021, 6, 6)
   const startMonth = startDate.getMonth()
   const week = ["日", "月", "火", "水", "木", "金", "土"]
@@ -79,7 +79,7 @@ export function Calendar() {
         ></div>
         {tasks.map((task) => (
           <div
-            key={`Calendar_task_name_${task}`}
+            key={`WBS_task_name_${task}`}
             style={{
               borderTop: "1px solid #ccc",
               display: "flex",
@@ -109,7 +109,7 @@ export function Calendar() {
           }}
         >
           {dates.map(({ year, date, month }, index) => (
-            <div key={`Calendar_month_${year}_${month}_${date}`}>
+            <div key={`WBS_month_${year}_${month}_${date}`}>
               <div
                 style={{
                   borderLeft: index === 0 || date === 1 ? "1px solid #ccc" : "none",
@@ -134,7 +134,7 @@ export function Calendar() {
           }}
         >
           {dates.map(({ year, date, day, month }) => (
-            <div key={`Calendar_date_${year}_${month}_${date}`}>
+            <div key={`WBS_date_${year}_${month}_${date}`}>
               <div
                 style={{
                   borderLeft: "1px solid #ccc",
@@ -170,14 +170,14 @@ export function Calendar() {
         </div>
         {tasks.map((task) => (
           <div
-            key={`Calendar_task_${task}`}
+            key={`WBS_task_${task}`}
             style={{
               display: "flex",
             }}
           >
             {dates.map(({ year, month, date }) => (
               <div
-                key={`Calendar_task_${task}_date_${year}_${month}_${date}`}
+                key={`WBS_task_${task}_date_${year}_${month}_${date}`}
                 style={{
                   borderLeft: "1px solid #ccc",
                   borderTop: "1px solid #ccc",
@@ -194,4 +194,4 @@ export function Calendar() {
   )
 }
 
-export default Calendar
+export default WBS
