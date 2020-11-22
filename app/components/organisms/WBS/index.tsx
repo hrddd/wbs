@@ -5,7 +5,7 @@ export function WBS() {
   const startDate = new Date(2021, 6, 6)
   const startMonth = startDate.getMonth()
   const week = ["日", "月", "火", "水", "木", "金", "土"]
-  const monthes = new Array(13).fill(0).map((_item, index) => {
+  const months = new Array(13).fill(0).map((_item, index) => {
     const year = startMonth + index <= 12 ? startDate.getFullYear() : startDate.getFullYear() + 1
     const month = (startMonth + index) % 12 || 12 // TODO: declare Month type,,,: 0 < Month < 13
     const endDate = new Date(year, month, 0).getDate()
@@ -22,7 +22,7 @@ export function WBS() {
   })
   const tasks = new Array(50).fill(0).map((_value, index) => "タスク その" + index)
 
-  const dates = monthes
+  const dates = months
     .map(({ year, month, startDate, endDate, startDay }) => {
       return new Array(endDate - startDate + 1).fill(0).map((_item, index) => ({
         year,
@@ -34,7 +34,7 @@ export function WBS() {
     .reduce((acc, item) => [...acc, ...item], [])
 
   // TODO: rebuild years property,,,
-  const years = monthes.reduce((acc, { year, dateTotalCount }) => {
+  const years = months.reduce((acc, { year, dateTotalCount }) => {
     return {
       ...acc,
       [year]: {
@@ -50,7 +50,7 @@ export function WBS() {
       cellLength: dateTotalCount,
     })
   )
-  const monthLabels: StickyRowProps["labels"] = monthes.map((data) => ({
+  const monthLabels: StickyRowProps["labels"] = months.map((data) => ({
     label: data.month.toString(),
     cellLength: data.dateTotalCount,
   }))
