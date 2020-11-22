@@ -9,12 +9,15 @@ export function WBS() {
     const year = startMonth + index <= 12 ? startDate.getFullYear() : startDate.getFullYear() + 1
     const month = (startMonth + index) % 12
     const endDate = new Date(year, month, 0).getDate()
+    const _startDate = index === 0 ? startDate.getDate() : 1
+    const _endDate = index === 12 ? startDate.getDate() - 1 : endDate
     return {
       year,
       month,
-      startDate: index === 0 ? startDate.getDate() : 1,
-      endDate: index === 12 ? startDate.getDate() - 1 : endDate,
+      startDate: _startDate,
+      endDate: _endDate,
       startDay: new Date(year, month - 1, 1).getDay(),
+      dateTotalCount: _endDate - _startDate + 1, // TODO: convert date Array: [6, 7, 8,,,,30] because this is selector
     }
   })
   const tasks = new Array(50).fill(0).map((_value, index) => "タスク その" + index)
@@ -30,20 +33,27 @@ export function WBS() {
     })
     .reduce((acc, item) => [...acc, ...item], [])
 
-  const years = monthes.reduce((acc, { year, month, startDate, endDate, startDay }) => {
+  // TODO: rebuild years property,,,
+  const years = monthes.reduce((acc, { year, dateTotalCount }) => {
     return {
       ...acc,
       [year]: {
-        dateTotalCount: (acc[year]?.dateTotalCount || 0) + (endDate - startDate + 1),
+        dateTotalCount: (acc[year]?.dateTotalCount || 0) + dateTotalCount,
       },
     }
   }, {} as { [key: string]: { dateTotalCount: number } })
+
+  // Props
   const yearLabels: StickyRowProps["labels"] = Object.entries(years).map(
-    ([year, { dateTotalCount }], index) => ({
+    ([year, { dateTotalCount }]) => ({
       label: year,
       cellLength: dateTotalCount,
     })
   )
+  const monthLabels: StickyRowProps["labels"] = monthes.map((data) => ({
+    label: data.month.toString(),
+    cellLength: data.dateTotalCount,
+  }))
 
   return (
     <div
@@ -103,31 +113,7 @@ export function WBS() {
         }}
       >
         <StickyRow labels={yearLabels} />
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          {dates.map(({ year, date, month }, index) => (
-            <div key={`WBS_month_${year}_${month}_${date}`}>
-              <div
-                style={{
-                  borderLeft: index === 0 || date === 1 ? "1px solid #ccc" : "none",
-                  borderTop: "1px solid #ccc",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "30px",
-                  height: "30px",
-                  flex: "0 0 30px",
-                  flexDirection: "column",
-                }}
-              >
-                {index === 0 || date === 1 ? month : ""}
-              </div>
-            </div>
-          ))}
-        </div>
+        <StickyRow labels={monthLabels} />
         <div
           style={{
             display: "flex",
