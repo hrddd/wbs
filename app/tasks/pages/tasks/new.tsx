@@ -16,6 +16,7 @@ const NewTaskPage: BlitzPage = () => {
         initialValues={{}}
         onSubmit={async () => {
           try {
+            // @ts-ignore: TODO: select proojectId
             const task = await createTaskMutation({ data: { name: "MyName" } })
             alert("Success!" + JSON.stringify(task))
             router.push("/tasks/[taskId]", `/tasks/${task.id}`)

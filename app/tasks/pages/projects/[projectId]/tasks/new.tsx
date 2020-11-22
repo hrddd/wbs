@@ -17,6 +17,7 @@ const NewTaskPage: BlitzPage = () => {
         onSubmit={async () => {
           try {
             console.log({ data: { name: "MyName" }, projectId })
+            // @ts-ignore: TODO: redirect on no proojectId
             const task = await createTaskMutation({ data: { name: "MyName" }, projectId })
             alert("Success!" + JSON.stringify(task))
             router.push(
