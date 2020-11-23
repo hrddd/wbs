@@ -1,5 +1,5 @@
 import React from "react"
-import { StickyRow, StickyRowProps } from "./StickyRow"
+import { StickyColumns, StickyColumnsProps } from "./StickyColumns"
 
 export function WBS() {
   const startDate = new Date(2021, 6, 6)
@@ -44,13 +44,13 @@ export function WBS() {
   }, {} as { [key: string]: { dateTotalCount: number } })
 
   // Props
-  const yearLabels: StickyRowProps["labels"] = Object.entries(years).map(
+  const yearLabels: StickyColumnsProps["labels"] = Object.entries(years).map(
     ([year, { dateTotalCount }]) => ({
       label: year,
       cellLength: dateTotalCount,
     })
   )
-  const monthLabels: StickyRowProps["labels"] = months.map((data) => ({
+  const monthLabels: StickyColumnsProps["labels"] = months.map((data) => ({
     label: data.month.toString(),
     cellLength: data.dateTotalCount,
   }))
@@ -112,8 +112,8 @@ export function WBS() {
           boxShadow: "1px 0 0 0 #ccc inset",
         }}
       >
-        <StickyRow labels={yearLabels} />
-        <StickyRow labels={monthLabels} />
+        <StickyColumns labels={yearLabels} />
+        <StickyColumns labels={monthLabels} />
         <div
           style={{
             display: "flex",

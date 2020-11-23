@@ -1,21 +1,21 @@
 import React from "react"
 import { StickyCell } from "./StickyCell"
 
-export type StickyCellsProps = {
+export type StickyColumnProps = {
   label: string
   cellLength: number
 }
-export const StickyCells: React.FC<StickyCellsProps> = ({ label, cellLength }) => {
+export const StickyColumn: React.FC<StickyColumnProps> = ({ label, cellLength }) => {
   return (
     <div
-      key={`StickyCells_${label}`}
+      key={`StickyColumn_${label}`}
       style={{
         display: "flex",
       }}
     >
       {new Array(cellLength).fill(0).map((_data, index) => {
         const cellLabel = index === 0 ? label : ""
-        return <StickyCell key={`StickyCells_cell_${label}_${index}`} label={cellLabel} />
+        return <StickyCell key={`StickyColumn_cell_${label}_${index}`} label={cellLabel} />
       })}
     </div>
   )
