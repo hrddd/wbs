@@ -20,7 +20,15 @@ export function WBS() {
       dateTotalCount: _endDate - _startDate + 1, // TODO: convert date Array: [6, 7, 8,,,,30] because this is selector
     }
   })
-  const tasks = new Array(50).fill(0).map((_value, index) => "タスク その" + index)
+  const tasks = new Array(50).fill(0).map((_value, index) => ({
+    id: index,
+    label: "タスク その" + index,
+    startDate: "2020/6/25",
+    endDate: "2020/7/7",
+    md: 13,
+    player: "WBS 太郎",
+    status: "着手中",
+  }))
 
   const dates = months
     .map(({ year, month, startDate, endDate, startDay }) => {
@@ -83,31 +91,151 @@ export function WBS() {
         ></div>
         <div
           style={{
-            width: "30px",
+            borderTop: "1px solid #ccc",
+            display: "flex",
             height: "30px",
+            flex: "0 0 30px",
+            alignItems: "center",
           }}
-        ></div>
+        >
+          <div
+            style={{
+              width: "180px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            タスク
+          </div>
+          <div
+            style={{
+              width: "30px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            MD
+          </div>
+          <div
+            style={{
+              width: "120px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            担当者
+          </div>
+          <div
+            style={{
+              width: "120px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            開始予定日
+          </div>
+          <div
+            style={{
+              width: "120px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            終了予定日
+          </div>
+          <div
+            style={{
+              width: "60px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            状態
+          </div>
+        </div>
         {tasks.map((task) => (
           <div
-            key={`WBS_task_name_${task}`}
+            key={`WBS_task_name_${task.id}`}
             style={{
               borderTop: "1px solid #ccc",
               display: "flex",
-              width: "100px",
               height: "30px",
               flex: "0 0 30px",
               alignItems: "center",
             }}
           >
-            <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              {task}
+            <div
+              style={{
+                width: "180px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {task.label}
+            </div>
+            <div
+              style={{
+                width: "30px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {task.md}
+            </div>
+            <div
+              style={{
+                width: "120px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {task.player}
+            </div>
+            <div
+              style={{
+                width: "120px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {task.startDate}
+            </div>
+            <div
+              style={{
+                width: "120px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {task.endDate}
+            </div>
+            <div
+              style={{
+                width: "60px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {task.status}
             </div>
           </div>
         ))}
       </div>
       <div
         style={{
-          width: "1000px",
+          width: "calc(100vw - 630px)",
           overflowX: "auto",
           boxShadow: "1px 0 0 0 #ccc inset",
         }}
