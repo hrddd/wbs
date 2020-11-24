@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useCallback } from "react"
 import { StickyColumns, StickyColumnsProps } from "./StickyColumns"
 
 export function WBS() {
@@ -63,15 +63,25 @@ export function WBS() {
     cellLength: data.dateTotalCount,
   }))
 
+  const headerRef = React.createRef<HTMLDivElement>()
+  const gridRef = React.createRef<HTMLDivElement>()
+  const handleHeaderScroll = (e: React.UIEvent<HTMLElement>) => {
+    gridRef!.current!.scrollLeft = e.currentTarget.scrollLeft
+  }
+  const handleGridScroll = (e: React.UIEvent<HTMLElement>) => {
+    headerRef!.current!.scrollLeft = e.currentTarget.scrollLeft
+  }
+
   return (
     <div
       className="WBS"
       style={{
         display: "grid",
-        gridTemplateColumns: "630px 1fr",
-        gridTemplateRows: "120px 1fr",
+        gridTemplateColumns: "631px 1fr", // TODO: What is 630 + "1" px...
+        gridTemplateRows: "123px 1fr", // TODO: What is 120 + "3" px...
         width: "100vw",
         zIndex: 0,
+        border: "1px solid #ccc",
       }}
     >
       <header
@@ -80,7 +90,7 @@ export function WBS() {
           gridColumn: "1 / 3",
           gridRow: 1,
           display: "flex",
-          border: "1px solid #ccc",
+          borderBottom: "1px solid #ccc",
           position: "sticky",
           top: 0,
           background: "#fff",
@@ -91,12 +101,10 @@ export function WBS() {
           className="WBS__header-tasks"
           style={{
             flex: "0 0 630px",
-            paddingTop: "90px",
+            paddingTop: "91px", // TODO: What is 90 + "1" px...
+            borderRight: "1px solid #ccc",
           }}
         >
-          <div></div>
-          <div></div>
-          <div></div>
           <div
             style={{
               borderTop: "1px solid #ccc",
@@ -174,6 +182,8 @@ export function WBS() {
             flex: "0 0 calc(100vw - 630px)",
             overflowX: "auto",
           }}
+          ref={headerRef}
+          onScroll={handleHeaderScroll}
         >
           <StickyColumns labels={yearLabels} />
           <StickyColumns labels={monthLabels} />
@@ -182,12 +192,12 @@ export function WBS() {
               display: "flex",
             }}
           >
-            {dates.map(({ year, date, day, month }) => (
+            {dates.map(({ year, date, day, month }, index) => (
               <div key={`WBS_date_${year}_${month}_${date}`}>
                 <div
                   style={{
-                    borderLeft: "1px solid #ccc",
-                    borderTop: "1px solid #ccc",
+                    borderLeft: index === 0 ? "none" : "1px solid #ccc",
+                    borderBottom: "1px solid #ccc",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -201,8 +211,7 @@ export function WBS() {
                 </div>
                 <div
                   style={{
-                    borderLeft: "1px solid #ccc",
-                    borderTop: "1px solid #ccc",
+                    borderLeft: index === 0 ? "none" : "1px solid #ccc",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -224,7 +233,7 @@ export function WBS() {
         style={{
           gridColumn: 1,
           gridRow: 2,
-          border: "1px solid #ccc",
+          borderRight: "1px solid #ccc",
           zIndex: 2,
         }}
       >
@@ -232,7 +241,7 @@ export function WBS() {
           <div
             key={`WBS_task_name_${task.id}`}
             style={{
-              borderTop: "1px solid #ccc",
+              borderBottom: "1px solid #ccc",
               display: "flex",
               height: "30px",
             }}
@@ -305,10 +314,11 @@ export function WBS() {
         style={{
           gridColumn: 2,
           gridRow: 2,
-          border: "1px solid #ccc",
-          overflow: "hidden",
+          overflowX: "auto",
           zIndex: 1,
         }}
+        ref={gridRef}
+        onScroll={handleGridScroll}
       >
         {tasks.map((task) => (
           <div
@@ -317,12 +327,12 @@ export function WBS() {
               display: "flex",
             }}
           >
-            {dates.map(({ year, month, date }) => (
+            {dates.map(({ year, month, date }, index) => (
               <div
                 key={`WBS__${task.id}_date_${year}_${month}_${date}`}
                 style={{
-                  borderLeft: "1px solid #ccc",
-                  borderTop: "1px solid #ccc",
+                  borderLeft: index === 0 ? "none" : "1px solid #ccc",
+                  borderBottom: "1px solid #ccc",
                   width: "30px",
                   height: "30px",
                   flex: "0 0 30px",

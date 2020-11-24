@@ -2,12 +2,13 @@ import React from "react"
 
 type StickyCellProps = {
   label: string
+  index: number
 }
-export const StickyCell: React.FC<StickyCellProps> = ({ label }) => {
+export const StickyCell: React.FC<StickyCellProps> = ({ label, index }) => {
   return (
     <div
       style={{
-        borderLeft: label ? "1px solid #ccc" : "none",
+        borderLeft: label && index > 0 ? "1px solid #ccc" : "none",
         position: label ? "sticky" : "static",
         display: "flex",
         justifyContent: "center",

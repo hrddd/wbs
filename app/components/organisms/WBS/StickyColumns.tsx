@@ -17,6 +17,7 @@ export const StickyColumns: React.FC<StickyColumnsProps> = ({ labels }) => {
             key={`StickyColumns_${label}_${index}`}
             style={{
               display: "flex",
+              borderBottom: "1px solid #ccc",
             }}
           >
             <StickyColumn label={label} cellLength={cellLength} />

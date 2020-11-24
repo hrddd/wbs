@@ -15,7 +15,9 @@ export const StickyColumn: React.FC<StickyColumnProps> = ({ label, cellLength })
     >
       {new Array(cellLength).fill(0).map((_data, index) => {
         const cellLabel = index === 0 ? label : ""
-        return <StickyCell key={`StickyColumn_cell_${label}_${index}`} label={cellLabel} />
+        return (
+          <StickyCell key={`StickyColumn_cell_${label}_${index}`} label={cellLabel} index={index} />
+        )
       })}
     </div>
   )
