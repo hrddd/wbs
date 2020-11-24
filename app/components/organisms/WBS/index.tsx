@@ -65,100 +65,169 @@ export function WBS() {
 
   return (
     <div
+      className="WBS"
       style={{
-        display: "flex",
-        border: "1px solid #ccc",
+        display: "grid",
+        gridTemplateColumns: "630px 1fr",
+        gridTemplateRows: "120px 1fr",
+        width: "100vw",
+        zIndex: 0,
       }}
     >
-      <div>
+      <header
+        className="WBS__header"
+        style={{
+          gridColumn: "1 / 3",
+          gridRow: 1,
+          display: "flex",
+          border: "1px solid #ccc",
+          position: "sticky",
+          top: 0,
+          background: "#fff",
+          zIndex: 3,
+        }}
+      >
         <div
+          className="WBS__header-tasks"
           style={{
-            width: "30px",
-            height: "30px",
-          }}
-        ></div>
-        <div
-          style={{
-            width: "30px",
-            height: "30px",
-          }}
-        ></div>
-        <div
-          style={{
-            width: "30px",
-            height: "30px",
-          }}
-        ></div>
-        <div
-          style={{
-            borderTop: "1px solid #ccc",
-            display: "flex",
-            height: "30px",
-            flex: "0 0 30px",
-            alignItems: "center",
+            flex: "0 0 630px",
+            paddingTop: "90px",
           }}
         >
+          <div></div>
+          <div></div>
+          <div></div>
           <div
             style={{
-              width: "180px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
+              borderTop: "1px solid #ccc",
+              display: "flex",
+              height: "30px",
+              flex: "0 0 30px",
+              alignItems: "center",
             }}
           >
-            タスク
-          </div>
-          <div
-            style={{
-              width: "30px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            MD
-          </div>
-          <div
-            style={{
-              width: "120px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            担当者
-          </div>
-          <div
-            style={{
-              width: "120px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            開始予定日
-          </div>
-          <div
-            style={{
-              width: "120px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            終了予定日
-          </div>
-          <div
-            style={{
-              width: "60px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            状態
+            <div
+              style={{
+                width: "180px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              タスク
+            </div>
+            <div
+              style={{
+                width: "30px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              MD
+            </div>
+            <div
+              style={{
+                width: "120px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              担当者
+            </div>
+            <div
+              style={{
+                width: "120px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              開始予定日
+            </div>
+            <div
+              style={{
+                width: "120px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              終了予定日
+            </div>
+            <div
+              style={{
+                width: "60px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              状態
+            </div>
           </div>
         </div>
+        <div
+          className="WBS__header-dates"
+          style={{
+            flex: "0 0 calc(100vw - 630px)",
+            overflowX: "auto",
+          }}
+        >
+          <StickyColumns labels={yearLabels} />
+          <StickyColumns labels={monthLabels} />
+          <div
+            style={{
+              display: "flex",
+            }}
+          >
+            {dates.map(({ year, date, day, month }) => (
+              <div key={`WBS_date_${year}_${month}_${date}`}>
+                <div
+                  style={{
+                    borderLeft: "1px solid #ccc",
+                    borderTop: "1px solid #ccc",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "30px",
+                    height: "30px",
+                    flex: "0 0 30px",
+                    flexDirection: "column",
+                  }}
+                >
+                  {date}
+                </div>
+                <div
+                  style={{
+                    borderLeft: "1px solid #ccc",
+                    borderTop: "1px solid #ccc",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "30px",
+                    height: "30px",
+                    flex: "0 0 30px",
+                    flexDirection: "column",
+                  }}
+                >
+                  {day}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </header>
+      <div
+        className="WBS__task"
+        style={{
+          gridColumn: 1,
+          gridRow: 2,
+          border: "1px solid #ccc",
+          zIndex: 2,
+        }}
+      >
         {tasks.map((task) => (
           <div
             key={`WBS_task_name_${task.id}`}
@@ -166,8 +235,6 @@ export function WBS() {
               borderTop: "1px solid #ccc",
               display: "flex",
               height: "30px",
-              flex: "0 0 30px",
-              alignItems: "center",
             }}
           >
             <div
@@ -234,64 +301,25 @@ export function WBS() {
         ))}
       </div>
       <div
+        className="WBS_grid"
         style={{
-          width: "calc(100vw - 630px)",
-          overflowX: "auto",
-          boxShadow: "1px 0 0 0 #ccc inset",
+          gridColumn: 2,
+          gridRow: 2,
+          border: "1px solid #ccc",
+          overflow: "hidden",
+          zIndex: 1,
         }}
       >
-        <StickyColumns labels={yearLabels} />
-        <StickyColumns labels={monthLabels} />
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          {dates.map(({ year, date, day, month }) => (
-            <div key={`WBS_date_${year}_${month}_${date}`}>
-              <div
-                style={{
-                  borderLeft: "1px solid #ccc",
-                  borderTop: "1px solid #ccc",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "30px",
-                  height: "30px",
-                  flex: "0 0 30px",
-                  flexDirection: "column",
-                }}
-              >
-                {date}
-              </div>
-              <div
-                style={{
-                  borderLeft: "1px solid #ccc",
-                  borderTop: "1px solid #ccc",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "30px",
-                  height: "30px",
-                  flex: "0 0 30px",
-                  flexDirection: "column",
-                }}
-              >
-                {day}
-              </div>
-            </div>
-          ))}
-        </div>
         {tasks.map((task) => (
           <div
-            key={`WBS_task_${task}`}
+            key={`WBS_task_${task.id}`}
             style={{
               display: "flex",
             }}
           >
             {dates.map(({ year, month, date }) => (
               <div
-                key={`WBS_task_${task}_date_${year}_${month}_${date}`}
+                key={`WBS__${task.id}_date_${year}_${month}_${date}`}
                 style={{
                   borderLeft: "1px solid #ccc",
                   borderTop: "1px solid #ccc",
