@@ -1,16 +1,41 @@
 import React, { useState, useCallback } from "react"
 import { StickyColumns, StickyColumnsProps } from "./StickyColumns"
 
+const CELL_HEIGHT = 30
+const CELL_WIDTH = 30
+
+type GetGridTaskBarPropsProps = {
+  startDate: Date
+  endDate: Date
+  gridStartDate: Date
+  gridEndDate: Date
+}
+const getGridTaskBarProps = ({
+  startDate,
+  endDate,
+  gridStartDate,
+  gridEndDate,
+}: GetGridTaskBarPropsProps) => {
+  const startTime = Math.max(startDate.getTime(), gridStartDate.getTime())
+  const endTime = Math.min(endDate.getTime(), gridEndDate.getTime())
+  return {
+    x: ((startTime - gridStartDate.getTime()) / (1000 * 24 * 60 * 60)) * CELL_WIDTH,
+    width: ((endTime - startTime) / (1000 * 24 * 60 * 60) + 1) * CELL_WIDTH,
+  }
+}
+
 export function WBS() {
-  const startDate = new Date(2021, 6, 6)
-  const startMonth = startDate.getMonth()
+  const gridStartDate = new Date("2020/6/6")
+  const gridEndDate = new Date("2021/6/5")
   const week = ["日", "月", "火", "水", "木", "金", "土"]
   const months = new Array(13).fill(0).map((_item, index) => {
-    const year = startMonth + index <= 12 ? startDate.getFullYear() : startDate.getFullYear() + 1
+    const startMonth = gridStartDate.getMonth() + 1
+    const year =
+      startMonth + index <= 12 ? gridStartDate.getFullYear() : gridStartDate.getFullYear() + 1
     const month = (startMonth + index) % 12 || 12 // TODO: declare Month type,,,: 0 < Month < 13
     const endDate = new Date(year, month, 0).getDate()
-    const _startDate = index === 0 ? startDate.getDate() : 1
-    const _endDate = index === 12 ? startDate.getDate() - 1 : endDate
+    const _startDate = index === 0 ? gridStartDate.getDate() : 1
+    const _endDate = index === 12 ? gridStartDate.getDate() - 1 : endDate
     return {
       year,
       month,
@@ -23,8 +48,8 @@ export function WBS() {
   const tasks = new Array(50).fill(0).map((_value, index) => ({
     id: index,
     label: "タスク その" + index,
-    startDate: "2020/6/25",
-    endDate: "2020/7/7",
+    startDate: new Date("2020/6/25"),
+    endDate: new Date("2020/7/7"),
     md: 13,
     player: "WBS 太郎",
     status: "着手中",
@@ -284,7 +309,7 @@ export function WBS() {
                 whiteSpace: "nowrap",
               }}
             >
-              {task.startDate}
+              {task.startDate.toLocaleDateString()}
             </div>
             <div
               style={{
@@ -294,7 +319,7 @@ export function WBS() {
                 whiteSpace: "nowrap",
               }}
             >
-              {task.endDate}
+              {task.endDate.toLocaleDateString()}
             </div>
             <div
               style={{
@@ -310,7 +335,7 @@ export function WBS() {
         ))}
       </div>
       <div
-        className="WBS_grid"
+        className="WBS__grid"
         style={{
           gridColumn: 2,
           gridRow: 2,
@@ -320,27 +345,57 @@ export function WBS() {
         ref={gridRef}
         onScroll={handleGridScroll}
       >
-        {tasks.map((task) => (
-          <div
-            key={`WBS_task_${task.id}`}
-            style={{
-              display: "flex",
-            }}
-          >
-            {dates.map(({ year, month, date }, index) => (
-              <div
-                key={`WBS__${task.id}_date_${year}_${month}_${date}`}
+        {tasks.map((task) => {
+          const gridTaskBarProps = getGridTaskBarProps({
+            startDate: task.startDate,
+            endDate: task.endDate,
+            gridStartDate: gridStartDate,
+            gridEndDate: gridEndDate,
+          })
+          return (
+            <div
+              key={`WBS_task_${task.id}`}
+              style={{
+                display: "flex",
+                position: "relative",
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={CELL_WIDTH * dates.length}
+                height={CELL_HEIGHT}
+                version="1.1"
+                className="Grid__task-bar"
                 style={{
-                  borderLeft: index === 0 ? "none" : "1px solid #ccc",
-                  borderBottom: "1px solid #ccc",
-                  width: "30px",
-                  height: "30px",
-                  flex: "0 0 30px",
+                  display: "flex",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
                 }}
-              ></div>
-            ))}
-          </div>
-        ))}
+              >
+                <rect
+                  x={gridTaskBarProps.x}
+                  y="5"
+                  width={gridTaskBarProps.width}
+                  height={CELL_HEIGHT - 10}
+                  fill="rgba(255, 120, 120, .5)"
+                />
+              </svg>
+              {dates.map(({ year, month, date }, index) => (
+                <div
+                  key={`WBS__${task.id}_date_${year}_${month}_${date}`}
+                  style={{
+                    borderLeft: index === 0 ? "none" : "1px solid #ccc",
+                    borderBottom: "1px solid #ccc",
+                    width: "30px",
+                    height: "30px",
+                    flex: "0 0 30px",
+                  }}
+                ></div>
+              ))}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
