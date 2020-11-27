@@ -4,27 +4,32 @@ import { StickyColumns, StickyColumnsProps } from "./StickyColumns"
 const CELL_HEIGHT = 30
 const CELL_WIDTH = 30
 
-type GetGridTaskBarPropsProps = {
+type GetTaskBarRectPropsProps = {
   startDate: Date
   endDate: Date
   gridStartDate: Date
   gridEndDate: Date
+  isDangerous: boolean
 }
-const getGridTaskBarProps = ({
+const getTaskBarRectProps = ({
   startDate,
   endDate,
   gridStartDate,
   gridEndDate,
-}: GetGridTaskBarPropsProps) => {
+  isDangerous,
+}: GetTaskBarRectPropsProps) => {
   const startTime = Math.max(startDate.getTime(), gridStartDate.getTime())
   const endTime = Math.min(endDate.getTime(), gridEndDate.getTime())
+  const color = isDangerous ? "rgba(255, 120, 120, .5)" : "rgba(120, 196, 120, .5)"
   return {
     x: ((startTime - gridStartDate.getTime()) / (1000 * 24 * 60 * 60)) * CELL_WIDTH,
     width: ((endTime - startTime) / (1000 * 24 * 60 * 60) + 1) * CELL_WIDTH,
+    fill: color,
   }
 }
 
 export function WBS() {
+  const today = new Date("2020/6/30")
   const gridStartDate = new Date("2020/6/6")
   const gridEndDate = new Date("2021/6/5")
   const week = ["日", "月", "火", "水", "木", "金", "土"]
@@ -45,15 +50,23 @@ export function WBS() {
       dateTotalCount: _endDate - _startDate + 1, // TODO: convert date Array: [6, 7, 8,,,,30] because this is selector
     }
   })
-  const tasks = new Array(50).fill(0).map((_value, index) => ({
-    id: index,
-    label: "タスク その" + index,
-    startDate: new Date("2020/6/25"),
-    endDate: new Date("2020/7/7"),
-    md: 13,
-    player: "WBS 太郎",
-    status: "着手中",
-  }))
+  const tasks = new Array(50).fill(0).map((_value, index) => {
+    const fastStartDate = new Date("2020/6/25")
+    const lateStartDate = new Date("2020/7/25")
+    return {
+      id: index,
+      label: "タスク その" + index,
+      startDate: index === 3 ? fastStartDate : lateStartDate,
+      endDate: new Date("2020/7/31"),
+      md: 13,
+      player: "WBS 太郎",
+      status: "着手中",
+      isDangerous:
+        index === 3
+          ? today.getTime() > fastStartDate.getTime()
+          : today.getTime() > lateStartDate.getTime(),
+    }
+  })
 
   const dates = months
     .map(({ year, month, startDate, endDate, startDay }) => {
@@ -217,39 +230,44 @@ export function WBS() {
               display: "flex",
             }}
           >
-            {dates.map(({ year, date, day, month }, index) => (
-              <div key={`WBS_date_${year}_${month}_${date}`}>
-                <div
-                  style={{
-                    borderLeft: index === 0 ? "none" : "1px solid #ccc",
-                    borderBottom: "1px solid #ccc",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "30px",
-                    height: "30px",
-                    flex: "0 0 30px",
-                    flexDirection: "column",
-                  }}
-                >
-                  {date}
+            {dates.map(({ year, date, day, month }, index) => {
+              const isToday = today.getTime() === new Date(`${year}/${month}/${date}`).getTime()
+              return (
+                <div key={`WBS_date_${year}_${month}_${date}`}>
+                  <div
+                    style={{
+                      borderLeft: index === 0 ? "none" : "1px solid #ccc",
+                      borderBottom: "1px solid #ccc",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "30px",
+                      height: "30px",
+                      flex: "0 0 30px",
+                      flexDirection: "column",
+                      backgroundColor: isToday ? "rgba(232, 232, 72, .5)" : "#fff",
+                    }}
+                  >
+                    {date}
+                  </div>
+                  <div
+                    style={{
+                      borderLeft: index === 0 ? "none" : "1px solid #ccc",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "30px",
+                      height: "30px",
+                      flex: "0 0 30px",
+                      flexDirection: "column",
+                      backgroundColor: isToday ? "rgba(232, 232, 72, .5)" : "#fff",
+                    }}
+                  >
+                    {day}
+                  </div>
                 </div>
-                <div
-                  style={{
-                    borderLeft: index === 0 ? "none" : "1px solid #ccc",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "30px",
-                    height: "30px",
-                    flex: "0 0 30px",
-                    flexDirection: "column",
-                  }}
-                >
-                  {day}
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </header>
@@ -346,11 +364,12 @@ export function WBS() {
         onScroll={handleGridScroll}
       >
         {tasks.map((task) => {
-          const gridTaskBarProps = getGridTaskBarProps({
+          const TaskBarRectProps = getTaskBarRectProps({
             startDate: task.startDate,
             endDate: task.endDate,
             gridStartDate: gridStartDate,
             gridEndDate: gridEndDate,
+            isDangerous: task.isDangerous,
           })
           return (
             <div
@@ -373,26 +392,24 @@ export function WBS() {
                   left: 0,
                 }}
               >
-                <rect
-                  x={gridTaskBarProps.x}
-                  y="5"
-                  width={gridTaskBarProps.width}
-                  height={CELL_HEIGHT - 10}
-                  fill="rgba(255, 120, 120, .5)"
-                />
+                <rect {...TaskBarRectProps} y="5" height={CELL_HEIGHT - 10} />
               </svg>
-              {dates.map(({ year, month, date }, index) => (
-                <div
-                  key={`WBS__${task.id}_date_${year}_${month}_${date}`}
-                  style={{
-                    borderLeft: index === 0 ? "none" : "1px solid #ccc",
-                    borderBottom: "1px solid #ccc",
-                    width: "30px",
-                    height: "30px",
-                    flex: "0 0 30px",
-                  }}
-                ></div>
-              ))}
+              {dates.map(({ year, month, date }, index) => {
+                const isToday = today.getTime() === new Date(`${year}/${month}/${date}`).getTime()
+                return (
+                  <div
+                    key={`WBS__${task.id}_date_${year}_${month}_${date}`}
+                    style={{
+                      borderLeft: index === 0 ? "none" : "1px solid #ccc",
+                      borderBottom: "1px solid #ccc",
+                      width: "30px",
+                      height: "30px",
+                      flex: "0 0 30px",
+                      backgroundColor: isToday ? "rgba(232, 232, 72, .5)" : "#fff",
+                    }}
+                  ></div>
+                )
+              })}
             </div>
           )
         })}
