@@ -53,16 +53,17 @@ export function WBS() {
   const tasks = new Array(50).fill(0).map((_value, index) => {
     const fastStartDate = new Date("2020/6/25")
     const lateStartDate = new Date("2020/7/25")
-    const dummyFlg = index % 3 === 0
+    const dateDummyFlg = index % 3 === 0
+    const status = ["未確定", "着手前", "着手中", "対応済", "完了"]
     return {
       id: index,
       label: "タスク その" + index,
-      startDate: dummyFlg ? fastStartDate : lateStartDate,
+      startDate: dateDummyFlg ? fastStartDate : lateStartDate,
       endDate: new Date("2020/7/31"),
       md: 13,
       player: "WBS 太郎",
-      status: "着手中",
-      isDangerous: dummyFlg
+      status: status[index % 5],
+      isDangerous: dateDummyFlg
         ? today.getTime() > fastStartDate.getTime()
         : today.getTime() > lateStartDate.getTime(),
     }
