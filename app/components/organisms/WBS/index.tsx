@@ -68,6 +68,41 @@ export function WBS() {
         : today.getTime() > lateStartDate.getTime(),
     }
   })
+  // TODO: taskから抽出してユニークに
+  const taskFilterParams = {
+    status: ["未確定", "着手前", "着手中", "対応済", "完了"],
+  }
+  const [taskFilteringParams, setTaskFilteringParams] = useState({
+    status: "",
+  })
+  const handleOnChange = (e) => {
+    setTaskFilteringParams({
+      ...taskFilteringParams,
+      [e.target.name]: e.target.value,
+    })
+  }
+  // TODO: orや以外など複数条件で探せるように
+  const filteredTasks = tasks.filter((task) => {
+    return Object.entries(taskFilteringParams).every(([key, value]) => {
+      return task[key] === value || value === ""
+    })
+  })
+  const TaskFilter = ({ handleOnChange, values, name, selectedValue }) => {
+    return (
+      <div>
+        <select name={name} onBlur={handleOnChange}>
+          <option value="" />
+          {values.map((value) => {
+            return (
+              <option value={value} selected={selectedValue === value}>
+                {value}
+              </option>
+            )
+          })}
+        </select>
+      </div>
+    )
+  }
 
   const dates = months
     .map(({ year, month, startDate, endDate, startDay }) => {
@@ -212,6 +247,12 @@ export function WBS() {
               }}
             >
               状態
+              <TaskFilter
+                handleOnChange={handleOnChange}
+                values={taskFilterParams.status}
+                name="status"
+                selectedValue={taskFilteringParams.status}
+              />
             </div>
           </div>
         </div>
@@ -281,7 +322,7 @@ export function WBS() {
           zIndex: 2,
         }}
       >
-        {tasks.map((task) => (
+        {filteredTasks.map((task) => (
           <div
             key={`WBS_task_name_${task.id}`}
             style={{
@@ -364,7 +405,7 @@ export function WBS() {
         ref={gridRef}
         onScroll={handleGridScroll}
       >
-        {tasks.map((task) => {
+        {filteredTasks.map((task) => {
           const TaskBarRectProps = getTaskBarRectProps({
             startDate: task.startDate,
             endDate: task.endDate,
