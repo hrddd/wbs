@@ -128,12 +128,12 @@ export function WBS() {
   // Props
   const yearLabels: StickyColumnsProps["labels"] = Object.entries(years).map(
     ([year, { dateTotalCount }]) => ({
-      label: year,
+      label: year + "年",
       cellLength: dateTotalCount,
     })
   )
   const monthLabels: StickyColumnsProps["labels"] = months.map((data) => ({
-    label: data.month.toString(),
+    label: data.month.toString() + "月",
     cellLength: data.dateTotalCount,
   }))
 

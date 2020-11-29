@@ -11,6 +11,8 @@ export const StickyColumn: React.FC<StickyColumnProps> = ({ label, cellLength })
       key={`StickyColumn_${label}`}
       style={{
         display: "flex",
+        backgroundColor: "#fff",
+        position: "relative",
       }}
     >
       {new Array(cellLength).fill(0).map((_data, index) => {
