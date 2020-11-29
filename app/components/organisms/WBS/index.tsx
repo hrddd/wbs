@@ -55,7 +55,7 @@ export function WBS() {
     const lateStartDate = new Date("2020/7/25")
     const dateDummyFlg = index % 3 === 0
     const status = ["未確定", "着手前", "着手中", "対応済", "完了"]
-    return {
+    const taskData = {
       id: index,
       label: "タスク その" + index,
       startDate: dateDummyFlg ? fastStartDate : lateStartDate,
@@ -63,9 +63,11 @@ export function WBS() {
       md: 13,
       player: "WBS 太郎",
       status: status[index % 5],
-      isDangerous: dateDummyFlg
-        ? today.getTime() > fastStartDate.getTime()
-        : today.getTime() > lateStartDate.getTime(),
+    }
+    // selector
+    return {
+      ...taskData,
+      isDangerous: today.getTime() > taskData.startDate.getTime(),
     }
   })
   // TODO: taskから抽出してユニークに
