@@ -1,8 +1,34 @@
-import React, { useState, useCallback } from "react"
+import React, { useState } from "react"
 import { StickyColumns, StickyColumnsProps } from "./StickyColumns"
 
 const CELL_HEIGHT = 30
 const CELL_WIDTH = 30
+
+type TaskStatus = "未確定" | "着手前" | "着手中" | "対応済" | "完了"
+const TASK_STATUS: readonly TaskStatus[] = ["未確定", "着手前", "着手中", "対応済", "完了"] as const
+
+type Task = {
+  id: number
+  label: string
+  startDate: Date
+  endDate: Date
+  md: number
+  player: string
+  status: TaskStatus
+}
+const TASK_PARAM_LABEL: Omit<
+  {
+    [key in keyof Task]: string
+  },
+  "id"
+> = {
+  label: "タスク",
+  startDate: "開始日",
+  endDate: "終了日",
+  md: "MD",
+  player: "担当者",
+  status: "ステータス",
+}
 
 type GetTaskBarRectPropsProps = {
   startDate: Date
@@ -54,7 +80,7 @@ export function WBS() {
     const fastStartDate = new Date("2020/6/25")
     const lateStartDate = new Date("2020/7/25")
     const dateDummyFlg = index % 3 === 0
-    const status = ["未確定", "着手前", "着手中", "対応済", "完了"]
+    const status = TASK_STATUS
     const taskData = {
       id: index,
       label: "タスク その" + index,
@@ -70,10 +96,19 @@ export function WBS() {
       isDangerous: today.getTime() > taskData.startDate.getTime(),
     }
   })
-  // TODO: taskから抽出してユニークに
-  const taskFilterParams = {
-    status: ["未確定", "着手前", "着手中", "対応済", "完了"],
-  }
+  const taskFilterParams = [...tasks].reduce(
+    (acc, task) => {
+      Object.keys(task).forEach((key: keyof Task) => {
+        if (key !== "status") {
+          acc[key] = acc[key] ? [...acc[key], task[key]] : [task[key]]
+        }
+      })
+      return acc
+    },
+    {
+      status: TASK_STATUS,
+    }
+  )
   const [taskFilteringParams, setTaskFilteringParams] = useState({
     status: "",
   })
@@ -190,72 +225,27 @@ export function WBS() {
               alignItems: "center",
             }}
           >
-            <div
-              style={{
-                width: "180px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              タスク
-            </div>
-            <div
-              style={{
-                width: "30px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              MD
-            </div>
-            <div
-              style={{
-                width: "120px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              担当者
-            </div>
-            <div
-              style={{
-                width: "120px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              開始予定日
-            </div>
-            <div
-              style={{
-                width: "120px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              終了予定日
-            </div>
-            <div
-              style={{
-                width: "60px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              状態
-              <TaskFilter
-                handleOnChange={handleOnChange}
-                values={taskFilterParams.status}
-                name="status"
-                selectedValue={taskFilteringParams.status}
-              />
-            </div>
+            {Object.keys(TASK_PARAM_LABEL).map((label) => {
+              const width = Math.max(label.length * 30, 180) + "px"
+              return (
+                <div
+                  style={{
+                    width,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {label}
+                  <TaskFilter
+                    handleOnChange={handleOnChange}
+                    values={taskFilterParams.status}
+                    name="status"
+                    selectedValue={taskFilteringParams.status}
+                  />
+                </div>
+              )
+            })}
           </div>
         </div>
         <div
