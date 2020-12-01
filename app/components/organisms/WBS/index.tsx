@@ -16,19 +16,15 @@ type Task = {
   player: string
   status: TaskStatus
 }
-const TASK_PARAM_LABEL: Omit<
-  {
-    [key in keyof Task]: string
-  },
-  "id"
-> = {
-  label: "タスク",
-  startDate: "開始日",
-  endDate: "終了日",
-  md: "MD",
-  player: "担当者",
-  status: "ステータス",
-}
+
+const TASK_PARAM_LABEL: [Exclude<keyof Task, "id">, string][] = [
+  ["label", "タスク"],
+  ["md", "MD"],
+  ["startDate", "開始日"],
+  ["endDate", "終了日"],
+  ["player", "担当者"],
+  ["status", "ステータス"],
+]
 
 type GetTaskBarRectPropsProps = {
   startDate: Date
@@ -219,18 +215,15 @@ export function WBS() {
           <div
             style={{
               borderTop: "1px solid #ccc",
-              display: "flex",
-              height: "30px",
-              flex: "0 0 30px",
+              display: "grid",
+              gridTemplateColumns: "180px 30px 120px 120px 120px 60px",
               alignItems: "center",
             }}
           >
-            {Object.keys(TASK_PARAM_LABEL).map((label) => {
-              const width = Math.max(label.length * 30, 180) + "px"
+            {TASK_PARAM_LABEL.map(([name, label]) => {
               return (
                 <div
                   style={{
-                    width,
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
@@ -240,7 +233,7 @@ export function WBS() {
                   <TaskFilter
                     handleOnChange={handleOnChange}
                     values={taskFilterParams.status}
-                    name="status"
+                    name={name}
                     selectedValue={taskFilteringParams.status}
                   />
                 </div>
